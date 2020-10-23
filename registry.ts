@@ -1,6 +1,15 @@
 import type { Constructor, oRegistry } from "o-types";
+import { Views, Arguments, Definitions, Layouts, Leafs } from "o-views";
 
 export class Registry implements oRegistry {
+    constructor() {
+        Views.forEach(v => this.registerClass(v));
+        Arguments.forEach(a => this.registerClass(a));
+        Definitions.forEach(d => this.registerClass(d));
+        Layouts.forEach(l => this.registerClass(l));
+        Leafs.forEach(l => this.registerClass(l));
+    }
+
     private LOOKUP: { name: string, ctor: Constructor<any>, classes: string[] }[] = [];
 
     private getClasses(ctor: Constructor<any>, arr: string[]): string[] {
