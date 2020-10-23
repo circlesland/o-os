@@ -4,6 +4,7 @@ import { Registry } from "./registry";
 export class Kernel {
   registry: oRegistry;
   isLocal: boolean;
+  events: any;
 
   private constructor() {
     this.isLocal = window.location.hostname == "localhost"
