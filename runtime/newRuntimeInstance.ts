@@ -1,4 +1,4 @@
-import type {Event} from "../interfaces/event";
+import type {Event} from "o-types";
 
 export class NewRuntimeInstance implements Event
 {

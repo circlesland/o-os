@@ -1,38 +1,34 @@
-export class Kernel {
-    // ipfsNode: IPFS = IPFS.create();
-    registry: Registry = new Registry();
-}
-type RegistryEntry = {
-    name: string;
-    cid: string;
-    classes: string[];
-}
-export class Registry {
-    private lookup: { key: RegistryEntry, value: new () => object }[] = [];
+import type { Constructor, oRegistry } from "o-types";
 
-    register<S extends new () => object>(s: S): Registry {
+export class Registry implements oRegistry {
+    private LOOKUP: { name: string, ctor: Constructor<any>, classes: string[] }[] = [];
 
-        const entry: RegistryEntry = {
-            name: s.name,
-            cid: s.name,
-            classes: Registry.getClasses(s)
-        };
-
-        this.lookup.push({ key: entry, value: s });
-        return this;
-    }
-
-    get<S extends new () => object>(name: string): S | null {
-        let type = this.lookup.find(x => x.key.name == name).value;
-        return type ? type as S : null;
-    }
-
-    static getClasses<S extends new () => object>(s: S, arr?: string[]): string[] {
-        if (!s) return arr;
-        arr = arr ? arr : [];
-        if (s.name == "") return;
-        arr.push(s.name);
-        Registry.getClasses(Object.getPrototypeOf(s), arr);
+    private getClasses(ctor: Constructor<any>, arr: string[]): string[] {
+        if (!ctor) return arr; 1
+        if (ctor.name == "") return;
+        arr.push(ctor.name);
+        this.getClasses(Object.getPrototypeOf(ctor), arr);
         return arr;
     }
+
+    registerClass<T extends Constructor<I>, I>(ctor: T) {
+        this.LOOKUP.push({ name: ctor.name, ctor, classes: this.getClasses(ctor, []) })
+    }
+
+    getClass<I>(name: string): Constructor<I> {
+        return this.LOOKUP.find(x => x.name == name).ctor;
+    }
+
+    getNewInstance<I>(name: string, clone?: any, ...args: any[]): I {
+        var clazz = this.getClass<I>(name)
+        var instance = new clazz(...args);
+        if (clone) {
+            let keys = Object.keys(clone);
+            for (let key of keys)
+                instance[key] = clone[key];
+        }
+        return instance;
+    }
 }
+
+

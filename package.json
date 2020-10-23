@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/omoearth/o-os/issues"
   },
-  "homepage": "https://github.com/omoearth/o-os#readme"
+  "homepage": "https://github.com/omoearth/o-os#readme",
+  "dependencies": {
+    "o-types": "file:../o-types",
+    "o-views": "file:../o-views"
+  }
 }

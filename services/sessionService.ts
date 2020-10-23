@@ -5,8 +5,8 @@ import {
     APIServiceClient,
     ServiceError,
 } from "@textile/hub-grpc/hub_pb_service";
-import type { ApiResponse } from "../interfaces/apiResponse";
-import type { User } from "../interfaces/user";
+import type { ApiResponse } from "../../o-types/interfaces/apiResponse";
+import type { User } from "../../o-types/interfaces/user";
 import { Buckets, Identity, KeyInfo } from '@textile/hub'
 
 const isLocal = window.location.hostname == "localhost" || window.location.hostname == "127.0.0.1";

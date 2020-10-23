@@ -1,0 +1,16 @@
+{
+    "type": "CssGrid",
+    "definition": {
+        "areas": "header\nmain\nbottom",
+        "columnTemplate": "1fr",
+        "rowTemplate": "1fr"
+    },
+    "children": [
+        {
+            "type": "View",
+            "args": {
+                "area": "main"
+            }
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-import { NewRuntimeInstance } from "./_other/newRuntimeInstance";
+import { NewRuntimeInstance } from "o-views/_other/gridCompositor/newRuntimeInstance";
 import { RemovedRuntimeInstance } from "./_other/removedRuntimeInstance";
 import { DeviceClass } from "./interfaces/component";
 export const runtime = {
