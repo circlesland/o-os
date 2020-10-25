@@ -156,6 +156,7 @@ export class SessionService {
 
     getUser() {
         return {
+            username: this.username,
             email: this.useremail,
             img: this.profileImage ? this.profileImage : "/images/placeholder_profile.jpg"
         }
