@@ -2,12 +2,15 @@ import type { Constructor, oRegistry } from "@omoearth/o-types";
 // import { Views, Arguments, Definitions, Layouts, Leafs } from "o-views";
 
 export class Registry implements oRegistry {
-    constructor() {
+    private constructor() {
         // Views.forEach(v => this.registerClass(v));
         // Arguments.forEach(a => this.registerClass(a));
         // Definitions.forEach(d => this.registerClass(d));
         // Layouts.forEach(l => this.registerClass(l));
         // Leafs.forEach(l => this.registerClass(l));
+    }
+    static async init(): Promise<Registry>{
+        return new Registry();
     }
 
     private LOOKUP: { name: string, ctor: Constructor<any>, classes: string[] }[] = [];
