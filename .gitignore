@@ -80,7 +80,7 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist/build
+dist
 
 # Gatsby files
 .cache/
@@ -105,3 +105,12 @@ dist/build
 
 .history
 
+**/[Bb]undle*
+
+# Remove js and js.map files from git, except config files
+*.js
+*.js.map
+
+!/*.config.js
+.DS_Store
+.DS_Store?

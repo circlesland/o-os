@@ -1,8 +1,8 @@
 {
-  "name": "o-os",
+  "name": "@omoearth/o-os",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": ".",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/omoearth/o-os#readme",
   "dependencies": {
-    "o-types": "file:../o-types",
-    "o-views": "file:../o-views"
+    "@omoearth/o-types": "file:../o-types",
+    "@omoearth/o-os": "file:../o-os"
   }
 }

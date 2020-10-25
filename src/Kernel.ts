@@ -1,5 +1,5 @@
-import type { oRegistry } from "o-types";
-import { Registry } from "./registry";
+import type { oRegistry } from "@omoearth/o-types";
+import { Registry } from "./Registry";
 
 export class Kernel {
   registry: oRegistry;
