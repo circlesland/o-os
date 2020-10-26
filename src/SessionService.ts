@@ -249,139 +249,139 @@ export class SessionService {
         var bucket = await this.getOdentityBucket();
         let raw = await buckets.pushPath(bucket.root.key, "/profileImage", file.stream());
         meta.cid = raw.path.cid.toString();
-        this.profileImage = `https://ipfs.io/ipfs/${cid}`;
+        this.profileImage = `https://ipfs.io/ipfs/${meta.cid}`;
 
         await buckets.pushPath(bucket.root.key, "/profileImage.json", JSON.stringify(meta));
     }
 
-//     type Odentity[
-//     username: string,
-//     email: string,
-//     familyName; string,
-//     givenName: string,
-// ]
+    //     type Odentity[
+    //     username: string,
+    //     email: string,
+    //     familyName; string,
+    //     givenName: string,
+    // ]
 
-// console.log("ORGS",await this.orgs());
-// let orgs = await this.orgs();
-// // orgs[0].
-// var bucks = [];
-// this.context = this.context.withSession(this.session);
-// var threadClient = new ThreadClient(this.context);
-// window["t1"] = threadClient;
-// window["c1"] = this.context.toJSON();
+    // console.log("ORGS",await this.orgs());
+    // let orgs = await this.orgs();
+    // // orgs[0].
+    // var bucks = [];
+    // this.context = this.context.withSession(this.session);
+    // var threadClient = new ThreadClient(this.context);
+    // window["t1"] = threadClient;
+    // window["c1"] = this.context.toJSON();
 
-// const db = new ThreadClient(this.context);
+    // const db = new ThreadClient(this.context);
 
-// const id = ThreadID.fromRandom()
-// await db.newDB(id, 'my-buckets')
-// window["t1"] = debug;
-// window["c2"] = this.context.toJSON();
-
-
-// for (let org of orgs) {
-//     // debugger;
-//     this.context.set("x-textile-org", org.getName());
-//     this.context.set("x-textile-thread", null);
-
-//     try {
+    // const id = ThreadID.fromRandom()
+    // await db.newDB(id, 'my-buckets')
+    // window["t1"] = debug;
+    // window["c2"] = this.context.toJSON();
 
 
-//         threadClient = new ThreadClient(this.context);
+    // for (let org of orgs) {
+    //     // debugger;
+    //     this.context.set("x-textile-org", org.getName());
+    //     this.context.set("x-textile-thread", null);
 
-//         let threads = await threadClient.listThreads();
-//         for (let thread of threads.listList.filter(x => x.isDb)) {
-//             try {
-
-//                 this.context.set("x-textile-thread", thread.id);
-//                 if (thread.name)
-//                     this.context.set("x-textile-thread-name", thread.name);
-
-//                 var buckets = new Buckets(this.context);
-//                 bucks.push(...(await buckets.list()));
-//             }
-//             catch (e) {
-//                 console.log(JSON.stringify(thread));
-//                 console.log(e);
-//             }
-//         }
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }
+    //     try {
 
 
+    //         threadClient = new ThreadClient(this.context);
 
-// return bucks;
+    //         let threads = await threadClient.listThreads();
+    //         for (let thread of threads.listList.filter(x => x.isDb)) {
+    //             try {
 
-// async getOrCreateKey(): Promise<KeyInfo | undefined> {
-//     var response = await this.listKeys();
+    //                 this.context.set("x-textile-thread", thread.id);
+    //                 if (thread.name)
+    //                     this.context.set("x-textile-thread-name", thread.name);
+
+    //                 var buckets = new Buckets(this.context);
+    //                 bucks.push(...(await buckets.list()));
+    //             }
+    //             catch (e) {
+    //                 console.log(JSON.stringify(thread));
+    //                 console.log(e);
+    //             }
+    //         }
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // }
 
 
-//     for (let item of response.getListList()) {
-//         if (item.getValid() && item.getType() == pb.KeyType.KEY_TYPE_ACCOUNT)
-//             return { key: item.getKey(), secret: item.getSecret() };
-//     }
 
-//     let meta = await this.context.toMetadata();
-//     let req = new pb.CreateKeyRequest();
-//     req.setType(pb.KeyType.KEY_TYPE_ACCOUNT);
-//     return new Promise((resolve) => {
-//         this.client.createKey(req, meta, (error: ServiceError | null,
-//             message: pb.CreateKeyResponse | null
-//         ) => {
-//             if (message) {
-//                 let key = message.getKeyInfo()
-//                 resolve({ key: key.getKey(), secret: key.getSecret() })
-//                 console.error(error);
-//                 resolve(undefined);
-//             }
-//         });
-//     });
-// }
+    // return bucks;
 
-async listBuckets(key, secret) {
-    const buckets = await Buckets.withKeyInfo({ key, secret });
-    let buck = await buckets.getOrCreate("mein bucket");
+    // async getOrCreateKey(): Promise<KeyInfo | undefined> {
+    //     var response = await this.listKeys();
 
-    let start = new Date();
-    for (let i = 0; i < 100; i++) {
-        const path = `index${i}.json`
-        const buf = Buffer.from(JSON.stringify("testcontent" + i, null, 2))
-        var foo = await buckets.pushPath(buck.root.key, path, buf);
+
+    //     for (let item of response.getListList()) {
+    //         if (item.getValid() && item.getType() == pb.KeyType.KEY_TYPE_ACCOUNT)
+    //             return { key: item.getKey(), secret: item.getSecret() };
+    //     }
+
+    //     let meta = await this.context.toMetadata();
+    //     let req = new pb.CreateKeyRequest();
+    //     req.setType(pb.KeyType.KEY_TYPE_ACCOUNT);
+    //     return new Promise((resolve) => {
+    //         this.client.createKey(req, meta, (error: ServiceError | null,
+    //             message: pb.CreateKeyResponse | null
+    //         ) => {
+    //             if (message) {
+    //                 let key = message.getKeyInfo()
+    //                 resolve({ key: key.getKey(), secret: key.getSecret() })
+    //                 console.error(error);
+    //                 resolve(undefined);
+    //             }
+    //         });
+    //     });
+    // }
+
+    async listBuckets(key, secret) {
+        const buckets = await Buckets.withKeyInfo({ key, secret });
+        let buck = await buckets.getOrCreate("mein bucket");
+
+        let start = new Date();
+        for (let i = 0; i < 100; i++) {
+            const path = `index${i}.json`
+            const buf = Buffer.from(JSON.stringify("testcontent" + i, null, 2))
+            var foo = await buckets.pushPath(buck.root.key, path, buf);
+        }
+
+        let end = new Date();
+        console.log("hub push take (average 100) " + (end.getMilliseconds() - start.getMilliseconds()) / 100 + " milliseconds")
+        console.log("uploaded mudda", foo);
+
+        // console.log(await buckets.listPathFlat(buck.root.key, "/"));
+        // let bucks = await buckets.list();
+        // console.log(bucks);
+        // for (let buck of bucks) {
+
+        //     console.log(await buckets.listPathFlat(buck.key, "/"));
+        // }
+        // buckets.
+        return null;
     }
 
-    let end = new Date();
-    console.log("hub push take (average 100) " + (end.getMilliseconds() - start.getMilliseconds()) / 100 + " milliseconds")
-    console.log("uploaded mudda", foo);
+    get hasSession() {
+        return this.session != "";
+    }
 
-    // console.log(await buckets.listPathFlat(buck.root.key, "/"));
-    // let bucks = await buckets.list();
-    // console.log(bucks);
-    // for (let buck of bucks) {
-
-    //     console.log(await buckets.listPathFlat(buck.key, "/"));
-    // }
-    // buckets.
-    return null;
-}
-
-get hasSession() {
-    return this.session != "";
-}
-
-async logout() {
-    this.context = this.context.withSession(this.session);
-    let meta = await this.context.toMetadata();
-    let req = new pb.SignoutRequest();
-    return new Promise((resolve) => {
-        this.client.signout(req, meta, async (error: ServiceError | null,
-            message: pb.SignoutResponse | null
-        ) => {
-            localStorage.removeItem("sid");
-            SessionService._instance = null;
-            window.o.session = await SessionService.GetInstance();
-            resolve(message)
+    async logout() {
+        this.context = this.context.withSession(this.session);
+        let meta = await this.context.toMetadata();
+        let req = new pb.SignoutRequest();
+        return new Promise((resolve) => {
+            this.client.signout(req, meta, async (error: ServiceError | null,
+                message: pb.SignoutResponse | null
+            ) => {
+                localStorage.removeItem("sid");
+                SessionService._instance = null;
+                window.o.session = await SessionService.GetInstance();
+                resolve(message)
+            });
         });
-    });
-}
+    }
 }
