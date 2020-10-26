@@ -7,7 +7,9 @@ import {
 } from "@textile/hub-grpc/hub_pb_service";
 import type { ApiResponse } from "@omoearth/o-types";
 import type { User } from "@omoearth/o-types";
-import { Buckets, Identity, KeyInfo } from '@textile/hub'
+import { Buckets, Identity, KeyInfo, ThreadID } from '@textile/hub';
+import { Client as ThreadClient } from "@textile/hub-threads-client"
+import { debug } from "svelte/internal";
 
 // const isLocal = window.location.hostname == "localhost" || window.location.hostname == "127.0.0.1";
 // const isDevelopment = window.location.hostname == "dev.omo.local";
@@ -166,6 +168,8 @@ export class SessionService {
         this.context = this.context.withSession(this.session);
         let meta = await this.context.toMetadata();
         let req = new pb.ListKeysRequest();
+
+        this.client.getIdentity
         return new Promise((resolve) => {
             this.client.listKeys(req, meta, (error: ServiceError | null,
                 message: pb.ListKeysResponse | null
@@ -174,6 +178,120 @@ export class SessionService {
             });
         });
     }
+
+    private async getIdentity() {
+        let req = new pb.GetIdentityRequest();
+        let meta = await this.context.toMetadata();
+        return new Promise((resolve) => {
+            this.client.getIdentity(req, meta, (error: ServiceError | null,
+                message: pb.GetIdentityResponse | null
+            ) => {
+                if (message) {
+                    resolve(message.getIdentity());
+                }
+                console.error(error);
+                resolve(undefined);
+            });
+        });
+    }
+
+    private async orgs(): Promise<pb.OrgInfo[]> {
+        let req = new pb.ListOrgsRequest();
+        let meta = await this.context.toMetadata();
+        return new Promise((resolve) => {
+            this.client.listOrgs(req, meta, (error: ServiceError | null,
+                message: pb.ListOrgsResponse | null
+            ) => {
+                if (message) {
+                    resolve(message.getListList());
+                }
+                // console.error(error);
+                resolve(undefined);
+            });
+        });
+    }
+
+    async getOdentityBucket() {
+        // console.log("ORGS",await this.orgs());
+        let orgs = await this.orgs();
+        // orgs[0].
+        var bucks = [];
+        this.context = this.context.withSession(this.session);
+        var threadClient = new ThreadClient(this.context);
+        window["t1"] = threadClient;
+        window["c1"] = this.context.toJSON();
+
+        // const db = new ThreadClient(this.context);
+
+        // const id = ThreadID.fromRandom()
+        // await db.newDB(id, 'my-buckets')
+        // window["t1"] = debug;
+        // window["c2"] = this.context.toJSON();
+
+
+        for (let org of orgs) {
+            // debugger;
+            this.context.set("x-textile-org", org.getName());
+            this.context.set("x-textile-thread", null);
+
+            try {
+
+
+                threadClient = new ThreadClient(this.context);
+
+                let threads = await threadClient.listThreads();
+                for (let thread of threads.listList.filter(x => x.isDb)) {
+                    try {
+
+                        this.context.set("x-textile-thread", thread.id);
+                        if (thread.name)
+                            this.context.set("x-textile-thread-name", thread.name);
+
+                        var buckets = new Buckets(this.context);
+                        bucks.push(...(await buckets.list()));
+                    }
+                    catch (e) {
+                        console.log(JSON.stringify(thread));
+                        console.log(e);
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+
+
+        return bucks;
+
+    }
+
+
+    // async getOrCreateKey(): Promise<KeyInfo | undefined> {
+    //     var response = await this.listKeys();
+
+
+    //     for (let item of response.getListList()) {
+    //         if (item.getValid() && item.getType() == pb.KeyType.KEY_TYPE_ACCOUNT)
+    //             return { key: item.getKey(), secret: item.getSecret() };
+    //     }
+
+    //     let meta = await this.context.toMetadata();
+    //     let req = new pb.CreateKeyRequest();
+    //     req.setType(pb.KeyType.KEY_TYPE_ACCOUNT);
+    //     return new Promise((resolve) => {
+    //         this.client.createKey(req, meta, (error: ServiceError | null,
+    //             message: pb.CreateKeyResponse | null
+    //         ) => {
+    //             if (message) {
+    //                 let key = message.getKeyInfo()
+    //                 resolve({ key: key.getKey(), secret: key.getSecret() })
+    //                 console.error(error);
+    //                 resolve(undefined);
+    //             }
+    //         });
+    //     });
+    // }
 
     async listBuckets(key, secret) {
         const buckets = await Buckets.withKeyInfo({ key, secret });
@@ -210,7 +328,7 @@ export class SessionService {
         let meta = await this.context.toMetadata();
         let req = new pb.SignoutRequest();
         return new Promise((resolve) => {
-            this.client.signout(req, meta, async(error: ServiceError | null,
+            this.client.signout(req, meta, async (error: ServiceError | null,
                 message: pb.SignoutResponse | null
             ) => {
                 localStorage.removeItem("sid");
