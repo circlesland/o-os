@@ -7,10 +7,11 @@ export class Kernel {
   isLocal: boolean;
   session: SessionService;
 
-  private constructor(sessionService:SessionService,registry:Registry) {
-    this.isLocal = window.location.hostname == "localhost"
+  private constructor(sessionService: SessionService, registry: Registry) {
+    this.isLocal = true;/* window.location.hostname == "localhost"
       || window.location.hostname == "127.0.0.1"
-      || window.location.hostname == "omo.local";
+      || window.location.hostname == "192.168.1.52"
+      || window.location.hostname == "omo.local";*/
     this.registry = registry;
     this.session = sessionService;
   }

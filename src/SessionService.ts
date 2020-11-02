@@ -9,10 +9,7 @@ import type { ApiResponse } from "@omoearth/o-types";
 import type { User } from "@omoearth/o-types";
 import { Buckets, Identity, KeyInfo, ThreadID } from '@textile/hub';
 import { Client as ThreadClient } from "@textile/hub-threads-client"
-import { debug } from "svelte/internal";
 
-// const isLocal = window.location.hostname == "localhost" || window.location.hostname == "127.0.0.1";
-// const isDevelopment = window.location.hostname == "dev.omo.local";
 
 export class SessionService {
     private session: string = "";
@@ -29,7 +26,8 @@ export class SessionService {
         "omo.earth:5000",
         "omo.local:5000",
         "127.0.0.1:5000",
-        "localhost:5000"
+        "localhost:5000",
+        "192.168.1.52:5000"
     ];
     profileImage: string = null;
     userImage: string;
@@ -55,8 +53,9 @@ export class SessionService {
     }
 
     async storeSession(sessionId) {
-        if (this.hostsWhiteList.some(x => x == window.location.host))
-            window.localStorage.setItem("sid", sessionId);
+        // TODO  implement whitelist
+        // if (this.hostsWhiteList.some(x => x == window.location.host))
+        window.localStorage.setItem("sid", sessionId);
         this.session = sessionId;
     }
 
