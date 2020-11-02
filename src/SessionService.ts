@@ -96,8 +96,10 @@ export class SessionService {
                     instance.useremail = message.getEmail();
                     instance.privateKey = message.getKey_asB64();
                     instance.session = sessionId;
-                    let cid = (await this.getProfileImageMeta()).cid;
-                    instance.profileImage = `https://ipfs.io/ipfs/${cid}`;
+                    let cid = (await this.getProfileImageMeta())?.cid;
+                    if (cid) {
+                        instance.profileImage = `https://hub.textile.io/ipfs/${cid}`;
+                    }
                     SessionService._instance = instance;
                     resolve(instance);
                 }
@@ -232,16 +234,20 @@ export class SessionService {
     }
 
     async getProfileImageMeta() {
-        var buckets = new Buckets(this.context);
-        var bucket = await this.getOdentityBucket();
-        let meta = await buckets.pullPath(bucket.root.key, "/profileImage.json", {})
+        try {
+            var buckets = new Buckets(this.context);
+            var bucket = await this.getOdentityBucket();
+            let meta = await buckets.pullPath(bucket.root.key, "/profileImage.json", {})
 
-        const { value } = await meta.next();
-        let str = "";
-        for (var i = 0; i < value.length; i++) {
-            str += String.fromCharCode(parseInt(value[i]));
+            const { value } = await meta.next();
+            let str = "";
+            for (var i = 0; i < value.length; i++) {
+                str += String.fromCharCode(parseInt(value[i]));
+            }
+            return JSON.parse(str);
         }
-        return JSON.parse(str);
+        catch (e) { }
+        return null;
     }
 
     async saveProfileImage(file: File, meta: any) {
